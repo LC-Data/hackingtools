@@ -1,0 +1,117 @@
+<html>
+
+  <style type="text/css">
+    .hidden {
+      visibility: hidden;
+    }
+
+    .shown {
+      visibility: visible;
+    }
+
+    #PDOSTbody {
+      height: 300px;
+      width: 500px;
+    }
+  </style>
+ 
+
+  <head>
+   <title>CSRF Test</title>
+ </head>
+
+ <body>
+  
+  <h2>CSRF Multi-Method Tool</h2>
+
+  Enter the http form request URL in to the box below:<br>
+
+  <input type="text" id="csrf_target_url"><br><br>
+
+  <button onclick="makeCSRFreq()">EXECUTE CSRF</button><br><br>
+
+  Select the type of request:<br>
+
+  Request method:
+  <select id="methodChoice">
+    <option value="GET" onclick='document.getElementById("postBox").className = "hidden";'>GET</option>
+    <option value="POST" onclick='document.getElementById("postBox").className = "shown";'>POST</option>
+    <option>More to come...</option>
+  </select><br><br>
+
+  <div id="postBox" class="hidden" onload="boxState()">
+    POST request body goes here:<br>
+    <input type="text/html" id="POSTbody" size="200" onkeyup="document.getElementById('testy').innerHTML = document.getElementById('POSTbody').value">
+  </div>
+
+
+
+  <div id="csrfText">
+    Response goes here - hopefully.
+  </div>
+
+
+  <div id="testy">
+    what's in here?
+  </div>
+
+
+
+
+   <script type="text/javascript">    
+     function makeCSRFreq(){
+      var xhttp = new XMLHttpRequest();
+      var target = document.getElementById("csrf_target_url").value;
+      var method = document.getElementById("methodChoice").value;
+      var POSTbody = document.getElementById("POSTbody").value;
+       
+      if (method == "POST"){
+        console.log("Attempting to send request to " + target);
+       
+        xhttp.open(method, target, POSTbody);    //creates the request object, with method, targetted URL, and post body if there is one
+        xhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+        xhttp.send(POSTbody);
+       
+        xhttp.onload = function() {
+          if (xhttp.status != 200) { // analyze HTTP status of the response
+            alert(`Error ${xhttp.status}: ${xhttp.statusText}` + ` ${method}`); // e.g. 404: Not Found
+          } else { // show the result
+            alert(`Done, got ${xhttp.response.length} bytes`); // responseText is the server
+          }
+        }
+      } else {
+
+
+        console.log("Attempting to send request to " + target);
+       
+        xhttp.open(method, target);    //creates the request object, with method, targetted URL, and post body if there is one
+      
+        xhttp.send();
+       
+        xhttp.onload = function() {
+          if (xhttp.status != 200) { // analyze HTTP status of the response
+            alert(`Error ${xhttp.status}: ${xhttp.statusText}` + ` ${method}`); // e.g. 404: Not Found
+          } else { // show the result
+            alert(`Done, got ${xhttp.response.length} bytes`); // responseText is the server
+          }
+        }
+      }
+      console.log(xhttp);
+      document.getElementById("csrfText").innerHTML = xhttp.responseText;
+   };
+
+  </script>
+   
+
+    <script type="text/javascript">
+      window.onload = function() {
+        if (document.getElementById("methodChoice").value == "POST") {
+          document.getElementById("postBox").className = "shown";
+        }
+      }
+    </script>
+
+
+
+</body>
+</html>
