@@ -34,10 +34,13 @@ Request method:
 
 <div id="postBox" class="hidden" onload="boxState()">
 POST request body goes here:<br>
-<input type="text/html" id="POSTbody">
+<input type="text/html" id="POSTbody" onkeyup="document.getElementById('testy').innerHTML = document.getElementById('POSTbody').value">
 </div>
 
 
+<div id="testy">
+	what's in here?
+</div>
 
 
 	<script type="text/javascript">
